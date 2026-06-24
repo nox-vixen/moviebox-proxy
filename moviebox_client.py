@@ -67,7 +67,7 @@ async def moviebox_get(path):
             headers=headers
         )
 
-return {
-    "status": r.status_code,
-    "text": r.text[:2000]
-}
+        return {
+            "status": r.status_code,
+            "text": r.text[:2000]
+        }
