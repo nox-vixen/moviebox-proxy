@@ -67,4 +67,7 @@ async def moviebox_get(path):
             headers=headers
         )
 
-        return r.json()
+return {
+    "status": r.status_code,
+    "text": r.text[:2000]
+}
