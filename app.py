@@ -43,7 +43,7 @@ def anime():
 
         data = asyncio.run(
             moviebox_get(
-                "/wefeed-h5api-bff/page-api/home"
+                "/wefeed-h5api-bff/home?host=moviebox.ph"
             )
         )
 
