@@ -5,7 +5,7 @@ import base64
 import time
 import json
 
-HOST = "https://api6.aoneroom.com"
+HOST = "https://h5-api.aoneroom.com"
 
 SECRET_KEY = "76iRl07s0xSN9jqmEWAt79EBJZulIQIsV64FZr2O"
 
