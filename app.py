@@ -38,20 +38,10 @@ def welcome():
 
 @app.route("/api/anime")
 def anime():
+    return jsonify({
+        "status": "alive"
+    })
 
-    try:
-        data = asyncio.run(
-            moviebox_get(
-                "/wefeed-h5api-bff/page-api/home"
-            )
-        )
-
-        return jsonify(data)
-
-    except Exception as e:
-        return jsonify({
-            "error": str(e)
-        }), 500
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
