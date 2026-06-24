@@ -1,0 +1,97 @@
+* { box-sizing: border-box; }
+body { margin: 0; background: black; color: white; font-family: sans-serif; overflow-x: hidden; }
+
+/* --- Index Page Styles --- */
+.screen { display: flex; align-items: center; justify-content: center; height: 100vh; }
+#icon { width: 250px; opacity: 0; animation: iconAnimation 5s forwards; }
+#text { width: 400px; opacity: 0; position: absolute; top: 50%; animation: textAnimation 5s forwards; }
+
+/* --- Onboarding Page Styles --- */
+.video-container { width: 100%; height: 50vh; position: relative; overflow: hidden; }
+video { width: 100%; height: 100%; object-fit: cover; }
+.shadow-overlay { position: absolute; bottom: 0; width: 100%; height: 150px; background: linear-gradient(to bottom, rgba(0,0,0,0), black); }
+#form-container { padding: 1px; display: flex; flex-direction: column; align-items: center; }
+.step { display: none; width: 100%; text-align: center; }
+.input-wrapper { position: relative; display: flex; align-items: center; width: 90%; margin: 20px auto; }
+input { width: 100%; padding: 15px; background: #222; border: 1px solid #444; color: white; border-radius: 20px; }
+.suffix { position: absolute; right: 20px; color: #888; }
+button { width: 90%; padding: 15px; border-radius: 25px; background: #007bff; border: none; color: white; margin-top: 20px; }
+button:disabled { background: #444; opacity: 0.5; }
+
+@keyframes iconAnimation { 0%{opacity:0} 10%{opacity:1} 40%{transform:translateY(-100px)} 80%{transform:translateY(0)} 100%{opacity:0} }
+@keyframes textAnimation { 0%{opacity:0} 40%{opacity:0} 50%{opacity:1} 80%{opacity:0} }
+input { 
+    width: 100%; 
+    padding: 15px; 
+    background: #222; 
+    border: 1px solid #444; 
+    color: white; 
+    border-radius: 20px; 
+    transition: transform 0.3s ease, border-color 0.3s ease; /* Smooth visual polish */
+}
+
+input:focus {
+    border-color: #007bff; /* Highlights the box in blue when focused */
+    outline: none;
+}
+.input-wrapper { 
+    position: relative; 
+    display: flex; 
+    align-items: center; 
+    width: 90%; 
+    margin: 10px auto; /* Reduced margin to bring it closer to the header */
+}
+h3 {
+    font-size: 24px;       /* Larger, bolder size */
+    font-weight: 700;      /* Make it punchy */
+    margin-top: -3px;     /* Nudge it upward */
+    margin-bottom: 25px;   /* Give it space from the input box */
+    letter-spacing: 0.5px; /* Professional spacing */
+    color: #ffffff;
+}
+.input-wrapper { 
+    position: relative; 
+    display: flex; 
+    align-items: center; 
+    width: 90%; 
+    margin: 20px auto; 
+}
+
+input { 
+    width: 100%; 
+    padding: 15px 70px 15px 15px; /* Added 70px right padding to make room for @nox */
+    background: #222; 
+    border: 1px solid #444; 
+    color: white; 
+    border-radius: 20px; 
+}
+
+.suffix { 
+    position: absolute; 
+    right: 15px; 
+    color: #888; 
+    pointer-events: auto; /* Change from 'none' to 'auto' so clicks pass through */
+    font-weight: bold;
+    cursor: pointer;      /* Gives the user a pointer on desktop */
+}
+
+/* Add this to keep the eye icon size consistent */
+#toggle-eye {
+    font-size: 20px;
+    z-index: 10;          /* Ensures it sits on top of everything */
+}
+
+.dob-wrapper { 
+    display: flex; 
+    gap: 10px; 
+    width: 90%; 
+    margin: 20px auto; 
+}
+.dob-wrapper select { 
+    flex: 1; 
+    padding: 15px; 
+    background: #222; 
+    color: white; 
+    border: 1px solid #444; 
+    border-radius: 10px; 
+}

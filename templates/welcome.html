@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <style>
+        body { 
+            margin: 0; padding: 0; 
+            /* Replace with your exact filename */
+            background-image: url('/static/image4.png'); 
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
+            background-size: cover;
+            height: 100vh; width: 100vw;
+        }
+        .btn-overlay {
+            position: absolute;
+            top: 66%; left: 12.5%; /* This centers it for 75% width */
+            width: 75%; height: 70px;
+            background: transparent;
+            border: none; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button class="btn-overlay" onclick="window.location.href='/home'"></button>
+</body>
+</html>

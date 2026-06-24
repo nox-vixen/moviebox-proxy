@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<title>ZenkaiOS - Anime</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+-webkit-tap-highlight-color:transparent;
+}
+
+body{
+background:#050505;
+color:white;
+max-width:390px;
+margin:auto;
+padding-top:72px;
+padding-bottom:85px;
+}
+
+/* HEADER */
+
+header{
+position:fixed;
+top:0;
+left:50%;
+transform:translateX(-50%);
+width:100%;
+max-width:390px;
+height:66px;
+background:#050505;
+padding: 12px 10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid #181818;
+z-index:1000;
+}
+
+.header-left h1{
+font-size:20px;
+font-weight:700;
+}
+
+.header-left p{
+font-size:10px;
+color:#999;
+margin-top:4px;
+}
+
+.search-btn{
+width:42px;
+height:42px;
+border:none;
+border-radius:50%;
+background:#111;
+color:white;
+font-size:17px;
+cursor:pointer;
+}
+
+/* GENRE CARDS */
+
+.genre-wrapper{
+padding:12px 10px;
+overflow-x:auto;
+display:flex;
+gap:10px;
+scrollbar-width:none;
+}
+
+.genre-wrapper::-webkit-scrollbar{
+display:none;
+}
+
+.genre-card{
+min-width:72px;
+height:78px;
+background:#0d0d0d;
+border:1px solid #1d1d1d;
+border-radius:18px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+gap:10px;
+cursor:pointer;
+transition:.3s;
+}
+
+.genre-card.active{
+border:7px solid #a855f7;
+box-shadow:0 0 15px rgba(168,85,247,.25);
+}
+
+.genre-card i{
+font-size:18px;
+}
+
+.genre-card span{
+font-size:9px;
+}
+
+/* FILTER ROW */
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px;
+    width: 100%; /* Ensure it spans full width */
+}
+.scrollable-tabs {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex-grow: 1; /* This makes it fill the space between buttons */
+}
+
+/* Hide scrollbar for the sliding tabs */
+.scrollable-tabs::-webkit-scrollbar { display: none; }
+
+/* Ensure buttons don't shrink */
+.filter-btn, .sort-btn {
+    flex-shrink: 0;
+}
+
+.filter-row::-webkit-scrollbar{
+display:none;
+}
+
+.filter-btn,
+.sort-btn{
+height:40px;
+padding:0 14px;
+border-radius:14px;
+background:#111;
+border:1px solid #1d1d1d;
+display:flex;
+align-items:center;
+gap:8px;
+white-space:nowrap;
+font-size:12px;
+color:white;
+flex-shrink:0;
+}
+
+.type-tabs{
+display:flex;
+background:#111;
+border-radius:14px;
+overflow:hidden;
+flex-shrink:0;
+}
+
+.type-tab{
+padding:12px 15px;
+font-size:12px;
+color:#999;
+white-space:nowrap;
+cursor:pointer;
+}
+
+.type-tab.active{
+background:#1c1029;
+color:#a855f7;
+}
+
+/* COUNT ROW */
+
+.count-row{
+padding:18px 16px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:12px;
+color:#999;
+}
+
+.count-row b{
+color:#a855f7;
+}
+
+/* ANIME GRID */
+
+.anime-grid{
+padding:0 10px;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+}
+
+.anime-card{
+background:#0c0c0c;
+border:1px solid #1b1b1b;
+border-radius:16px;
+overflow:hidden;
+transition: .25s;
+}
+.anime-card:active{
+transform:scale(.98);
+}
+
+.genre-card:active{
+transform:scale(.96);
+}
+
+.-btn:active,
+.filter-btn:active,
+.sort-btn:active{
+transform:scale(.95);
+}
+.poster{
+position:relative;
+}
+
+.poster img{
+width:100%;
+height:180px;
+border-radius: 16px 16px 0 0;
+object-fit:cover;
+display:block;
+}
+
+.bookmark{
+position:absolute;
+top:8px;
+right:8px;
+width:28px;
+height:28px;
+border-radius:10px;
+background:rgba(0,0,0,.45);
+backdrop-filter:blur(10px);
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:12px;
+}
+
+.info{
+padding:8px;
+}
+
+.info h3{
+font-size:11px;
+font-weight: 600;
+margin-bottom:8px;
+line-height:15px;
+}
+
+.meta{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+font-size:9px;
+color:#999;
+margin-bottom:8px;
+}
+
+.rating{
+color:gold;
+}
+
+.tags{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+}
+
+.tags span{
+background:#111;
+padding:4px 8px;
+border-radius:8px;
+font-size:8px;
+border:1px solid #161616;
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav{
+position:fixed;
+bottom:0;
+left:50%;
+transform:translateX(-50%);
+width:100%;
+max-width:390px;
+height:58px;
+background:#070707;
+border-top:1px solid #1b1b1b;
+display:flex;
+justify-content:space-around;
+align-items:center;
+z-index:1000;
+}
+
+.bottom-nav a{
+display:flex;
+flex-direction:column;
+align-items:center;
+text-decoration:none;
+color:#777;
+font-size:9px;
+}
+
+.bottom-nav i{
+font-size:16px;
+margin-bottom:3px;
+}
+
+.bottom-nav .active{
+color:#a855f7;
+}
+
+#bottomAvatar{
+width:20px;
+height:20px;
+border-radius:50%;
+object-fit:cover;
+border:1.5px solid #a855f7;
+margin-bottom:4px;
+}
+/* FILTER & SORT MODALS */
+
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.75);
+
+display:flex;
+justify-content:center;
+align-items:flex-end;
+
+opacity:0;
+visibility:hidden;
+pointer-events:none;
+
+transition:.3s;
+z-index:5000;
+}
+
+.modal.show{
+opacity:1;
+visibility:visible;
+pointer-events:auto;
+}
+
+.modal-box{
+width:100%;
+max-width:390px;
+background:#0c0c0c;
+border-radius:25px 25px 0 0;
+padding:20px;
+max-height:75vh;
+overflow-y:auto;
+overscroll-behavior:contain;
+-webkit-overflow-scrolling:touch;
+padding-bottom:40px;
+transform:translateY(100%);
+transition:
+transform .35s cubic-bezier(.22,.61,.36,1);
+}
+.modal.show .modal-box{
+transform:translateY(0);
+}
+.modal-box h3{
+font-size:17px;
+margin-bottom:18px;
+}
+.modal-header{
+position:sticky;
+top:-20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#0c0c0c;
+padding-bottom:15px;
+margin-bottom:20px;
+z-index:100;
+}
+
+.modal-header h3{
+margin:0;
+font-size:17px;
+}
+
+.close-modal{
+width:34px;
+height:34px;
+border:none;
+border-radius:50%;
+background:#111;
+border:1px solid #222;
+color:#999;
+font-size:15px;
+display:flex;
+justify-content:center;
+align-items:center;
+cursor:pointer;
+transition:.25s;
+}
+
+.close-modal:active{
+transform:scale(.92);
+}
+
+.close-modal:hover{
+color:#a855f7;
+border-color:#a855f7;
+}
+.option,
+.checkbox{
+padding:14px;
+margin-bottom:10px;
+background:#111;
+border:1px solid #1f1f1f;
+border-radius:14px;
+font-size:14px;
+cursor:pointer;
+}
+
+.option.active{
+border-color:#a855f7;
+color:#a855f7;
+}
+.checkbox-option{
+padding:14px;
+margin-bottom:10px;
+background:#111;
+border:1px solid #1f1f1f;
+border-radius:14px;
+font-size:14px;
+cursor:pointer;
+transition:.25s;
+}
+
+.checkbox-option.active{
+border:1px solid #a855f7;
+background:#16101f;
+color:#a855f7;
+box-shadow:
+0 0 12px
+rgba(168,85,247,.20);
+}
+
+.checkbox-option:active{
+transform:scale(.98);
+}
+.checkbox{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+#applySort{
+position:sticky;
+bottom:0;
+
+width:100%;
+height:50px;
+
+border:none;
+border-radius:14px;
+
+background:#a855f7;
+color:white;
+font-size:15px;
+font-weight:600;
+
+margin-top:15px;
+
+z-index:5;
+}
+.sort-actions{
+position:sticky;
+bottom:-20px;
+background:#0c0c0c;
+padding-top:15px;
+display:none;
+gap:10px;
+animation:slideUp .25s ease;
+}
+
+.sort-actions.show{
+display:flex;
+}
+
+#applySort,
+#clearSort{
+flex:1;
+height:48px;
+border:none;
+border-radius:14px;
+font-size:15px;
+font-weight:600;
+}
+
+#applySort{
+background:#a855f7;
+color:white;
+}
+
+#clearSort{
+background:#111;
+border:1px solid #262626;
+color:#aaa;
+}
+
+@keyframes slideUp{
+
+from{
+transform:translateY(30px);
+opacity:0;
+}
+
+to{
+transform:translateY(0);
+opacity:1;
+}
+
+}
+
+body.modal-open{
+overflow:hidden;
+touch-action:none;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="header-left">
+<h1>Anime</h1>
+<p>Explore all anime</p>
+</div>
+
+<button
+class="search-btn"
+id="searchBtn">
+<i class="fa-solid fa-search"></i>
+</button>
+
+</header>
+
+<div class="genre-wrapper">
+
+<div class="genre-card active">
+<i class="fa-solid fa-fire"></i>
+<span>All</span>
+</div>
+
+<div class="genre-card">
+<i class="fa-solid fa-burst"></i>
+<span>Action</span>
+</div>
+
+<div class="genre-card">
+<i class="fa-solid fa-wand-magic-sparkles"></i>
+<span>Fantasy</span>
+</div>
+
+<div class="genre-card">
+<i class="fa-solid fa-heart"></i>
+<span>Romance</span>
+</div>
+
+<div class="genre-card">
+<i class="fa-solid fa-face-laugh"></i>
+<span>Comedy</span>
+</div>
+
+<div class="genre-card">
+<i class="fa-solid fa-door-open"></i>
+<span>Isekai</span>
+</div>
+
+</div>
+
+<div class="filter-row">
+    <div class="filter-btn">
+        <i class="fa-solid fa-sliders"></i> Filter
+    </div>
+
+    <div class="scrollable-tabs">
+        <div class="type-tab active">All</div>
+        <div class="type-tab">TV Series</div>
+        <div class="type-tab">Movie</div>
+        <div class="type-tab">OVA</div>
+        <div class="type-tab">Special</div>
+    </div>
+
+    <div class="sort-btn">
+        <i class="fa-solid fa-arrow-down-wide-short"></i> Sort
+    </div>
+</div>
+
+
+<div class="count-row">
+
+<span>1,234 Anime</span>
+
+<span>
+Sort by:
+<b>Most Popular</b>
+</span>
+
+</div>
+
+<div
+class="anime-grid"
+id="animeGrid">
+
+</div>
+<!-- FILTER MODAL -->
+
+<div
+id="filterModal"
+class="modal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+  <h3>Choose Filter</h3>
+  <button class="close-modal" id="closeFilter">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+</div>
+
+<div id="filterList"></div>
+
+</div>
+
+</div>
+
+<!-- SORT MODAL -->
+
+<div
+id="sortModal"
+class="modal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+  <h3>Select Options</h3>
+  <button class="close-modal" id="closeSort">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+</div>
+
+<div id="sortList"></div>
+
+<div class="sort-actions">
+
+<button id="clearSort">
+Remove All
+</button>
+
+<button id="applySort">
+Apply
+</button>
+
+</div>
+
+</div>
+
+</div>
+<script>
+
+/* ---------- ANIME DATA ---------- */
+
+let animeData = [];
+
+const filters = {
+
+"By Genre":[
+"Action",
+"Adventure",
+"Comedy",
+"Romance",
+"Fantasy",
+"Isekai",
+"Sci-Fi",
+"Mystery",
+"Horror",
+"Thriller",
+"Drama",
+"Slice of Life",
+"Sports",
+"Music",
+"School",
+"Supernatural",
+"Historical",
+"Mecha",
+"Military",
+"Psychological",
+"Ecchi"
+],
+
+"By Popularity":[
+"Trending Now",
+"Most Popular",
+"Top Rated",
+"Most Watched",
+"Fan Favorites",
+"Currently Viral"
+],
+
+"By Release Time":[
+"New Releases",
+"Recently Added",
+"Latest Episodes",
+"This Season",
+"Upcoming Anime",
+"Old Classics"
+],
+
+"By Status":[
+"Ongoing",
+"Completed",
+"Hiatus",
+"Announced",
+"Cancelled"
+],
+
+"By Type":[
+"TV Series",
+"Movies",
+"OVA",
+"ONA",
+"Specials",
+"Short Anime"
+],
+
+"By Demographic":[
+"Shounen",
+"Seinen",
+"Shoujo",
+"Josei",
+"Kids"
+],
+
+"By Season":[
+"Spring Anime",
+"Summer Anime",
+"Fall Anime",
+"Winter Anime"
+],
+
+"By Year":[
+"2026",
+"2025",
+"2024",
+"2023",
+"2010s",
+"2000s",
+"1990s"
+],
+
+"By Language":[
+"Japanese Sub",
+"English Dub",
+"Hindi Dub",
+"Bengali Dub",
+"Multi Audio"
+],
+
+"By Duration":[
+"Under 10 Minutes",
+"Under 30 Minutes",
+"Long Running Series"
+],
+
+"By User Preferences":[
+"Continue Watching",
+"Watchlist",
+"Recommended For You",
+"Because You Watched…",
+"Downloaded Anime",
+"Recently Viewed"
+],
+
+"By Quality":[
+"360p",
+"480p",
+"720p",
+"1080p",
+"2K",
+"4K"
+]
+
+};
+/* ---------- GENERATE CARDS ---------- */
+
+const animeGrid =
+document.getElementById("animeGrid");
+let currentFilter =
+"By Genre";
+
+let selectedSorts = [];
+function createCard(anime){
+
+let tags = "";
+
+anime.tags.forEach(tag=>{
+
+tags += `
+<span>${tag}</span>
+`;
+
+});
+
+return `
+
+<div
+class="anime-card"
+onclick="openAnime('${anime.title}')">
+
+<div class="poster">
+
+<img src="${anime.image}">
+
+<div class="bookmark">
+
+<i class="fa-regular fa-bookmark"></i>
+
+</div>
+
+</div>
+
+<div class="info">
+
+<h3>${anime.title}</h3>
+
+<div class="meta">
+
+<span class="rating">
+⭐ ${anime.rating}
+</span>
+
+<span>${anime.year}</span>
+
+<span>${anime.episodes}</span>
+
+</div>
+
+<div class="tags">
+
+${tags}
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* ---------- GENRE ACTIVE ---------- */
+
+const genres =
+document.querySelectorAll(
+".genre-card"
+);
+
+genres.forEach(card=>{
+
+card.addEventListener(
+"click",
+()=>{
+
+genres.forEach(c=>{
+
+c.classList.remove(
+"active"
+);
+
+});
+
+card.classList.add(
+"active"
+);
+
+});
+
+});
+
+/* ---------- TYPE TAB ACTIVE ---------- */
+
+const tabs =
+document.querySelectorAll(
+".type-tab"
+);
+
+tabs.forEach(tab=>{
+
+tab.addEventListener(
+"click",
+()=>{
+
+tabs.forEach(t=>{
+
+t.classList.remove(
+"active"
+);
+
+});
+
+tab.classList.add(
+"active"
+);
+
+});
+
+});
+
+/* ---------- SEARCH ---------- */
+
+document
+.getElementById(
+"searchBtn"
+)
+.addEventListener(
+"click",
+()=>{
+
+window.location.href =
+"/search";
+
+});
+
+/* ---------- OPEN ANIME ---------- */
+
+function openAnime(title){
+
+alert(
+"Open: " + title
+);
+
+/*
+
+Later:
+
+window.location.href =
+"anime-details.html?anime="
++ encodeURIComponent(title);
+
+*/
+
+}
+const filterModal =
+document.getElementById("filterModal");
+
+const sortModal =
+document.getElementById("sortModal");
+
+const filterList =
+document.getElementById("filterList");
+
+const sortList =
+document.getElementById("sortList");
+const sortActions =
+document.querySelector(".sort-actions");
+
+const clearSort =
+document.getElementById("clearSort");
+document
+.getElementById("closeFilter")
+.addEventListener(
+"click",
+()=>{
+filterModal.classList.remove("show");
+}
+);
+
+document
+.getElementById("closeSort")
+.addEventListener(
+"click",
+()=>{
+sortModal.classList.remove("show");
+}
+);
+document
+.querySelector(".filter-btn")
+.addEventListener(
+"click",
+openFilter
+);
+
+document
+.querySelector(".sort-btn")
+.addEventListener(
+"click",
+openSort
+);
+function openFilter(){
+
+filterList.innerHTML = "";
+
+Object.keys(filters)
+.forEach(filter=>{
+
+filterList.innerHTML += `
+
+<div
+class="option
+${filter===currentFilter
+? "active"
+: ""}"
+
+onclick="
+selectFilter(
+'${filter}'
+)">
+
+${filter}
+
+</div>
+
+`;
+
+});
+
+filterModal.classList.add("show");
+document.body.classList.add("modal-open");
+
+}
+function selectFilter(filter){
+
+currentFilter = filter;
+
+filterModal.classList.remove(
+"show"
+);
+document.body.classList.remove("modal-open");
+}
+function openSort(){
+
+sortList.innerHTML = "";
+
+filters[currentFilter]
+.forEach(item=>{
+
+const active =
+selectedSorts.includes(item)
+? "active"
+: "";
+
+sortList.innerHTML += `
+
+<div
+class="checkbox-option ${active}"
+onclick="toggleOption(this,'${item}')">
+
+${item}
+
+</div>
+
+`;
+
+});
+
+if(selectedSorts.length){
+
+sortActions.classList.add("show");
+
+}
+else{
+
+sortActions.classList.remove("show");
+
+}
+
+sortModal.classList.add("show");
+
+}
+
+function toggleOption(
+element,
+value
+){
+
+element.classList.toggle(
+"active"
+);
+
+if(
+selectedSorts.includes(value)
+){
+
+selectedSorts =
+selectedSorts.filter(
+v=>v!==value
+);
+
+}
+else{
+
+selectedSorts.push(value);
+
+}
+
+if(selectedSorts.length){
+
+sortActions.classList.add(
+"show"
+);
+
+}
+else{
+
+sortActions.classList.remove(
+"show"
+);
+
+}
+
+}
+document
+.getElementById("applySort")
+.addEventListener(
+"click",
+()=>{
+
+selectedSorts = [];
+
+document
+.getElementById(
+"applySort"
+)
+.addEventListener(
+"click",
+()=>{
+
+sortModal.classList.remove(
+"show"
+);
+document.body.classList.remove("modal-open");
+console.log(
+selectedSorts
+);
+
+});
+
+sortModal.classList.remove(
+"show"
+);
+
+console.log(
+selectedSorts
+);
+
+});
+filterModal.onclick = e=>{
+
+if(
+e.target===filterModal
+){
+
+filterModal.classList.remove(
+"show"
+);
+
+}
+
+};
+
+sortModal.onclick = e=>{
+
+if(
+e.target===sortModal
+){
+
+sortModal.classList.remove(
+"show"
+);
+
+}
+
+};
+clearSort.addEventListener(
+"click",
+()=>{
+
+selectedSorts = [];
+
+document
+.querySelectorAll(
+".checkbox-option"
+)
+.forEach(item=>{
+
+item.classList.remove(
+"active"
+);
+
+});
+
+sortActions.classList.remove(
+"show"
+);
+
+}
+);
+fetch("/api/anime")
+.then(res => res.json())
+.then(data => {
+    console.log(data);
+})
+.catch(err => {
+    console.error(err);
+});
+
+fetch("/api/anime")
+.then(res => res.json())
+.then(data => {
+
+    animeData = data;
+
+    animeGrid.innerHTML = "";
+
+    animeData.forEach(anime => {
+        animeGrid.insertAdjacentHTML(
+            "beforeend",
+            createCard(anime)
+        );
+    });
+
+})
+.catch(err => {
+    alert("Backend Error: " + err);
+});
+
+</script>
+<!-- BOTTOM NAVIGATION -->
+
+<nav class="bottom-nav">
+
+<a onclick="goHome()">
+<i class="fa-solid fa-house"></i>
+<span>Home</span>
+</a>
+
+<a class="active">
+<i class="fa-solid fa-tv"></i>
+<span>Anime</span>
+</a>
+
+<a onclick="goMyList()">
+<i class="fa-solid fa-bookmark"></i>
+<span>My List</span>
+</a>
+
+<a onclick="goProfile()">
+
+<img
+id="bottomAvatar"
+src="https://i.pravatar.cc/100">
+
+<span>Profile</span>
+
+</a>
+
+</nav>
+
+<script>
+
+/* ---------- NAVIGATION ---------- */
+
+function goHome(){
+
+window.location.href =
+"/home";
+
+}
+
+function goMyList(){
+
+/* Create later */
+
+window.location.href =
+"/mylist";
+
+}
+
+function goProfile(){
+
+/* Create later */
+
+window.location.href =
+"/profile";
+
+}
+
+/* ---------- PREMIUM CARD ANIMATION ---------- */
+
+const cards =
+document.querySelectorAll(
+".anime-card"
+);
+
+cards.forEach(card=>{
+
+card.addEventListener(
+"touchstart",
+()=>{
+
+card.style.transform =
+"scale(.98)";
+
+card.style.transition =
+".2s";
+
+});
+
+card.addEventListener(
+"touchend",
+()=>{
+
+card.style.transform =
+"scale(1)";
+
+});
+
+});
+
+/* ---------- SMOOTH PAGE LOAD ---------- */
+
+document.body.style.opacity = "0";
+
+window.addEventListener(
+"load",
+()=>{
+
+document.body.style.transition =
+".3s";
+
+document.body.style.opacity =
+"1";
+
+});
+
+</script>
+
+</body>
+</html>

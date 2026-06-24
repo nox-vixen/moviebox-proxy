@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Search</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        body { margin: 0; background: #050505; color: white; font-family: Arial, sans-serif; }
+        .search-header { height: 65px; display: flex; align-items: center; gap: 12px; padding: 0 15px; background: #050505; position: fixed; top: 0; left: 0; right: 0; border-bottom: 1px solid #1b1b1b; z-index: 10; }
+        .back { font-size: 20px; cursor: pointer; padding: 5px; }
+        .search-box { flex: 1; height: 42px; background: #111; border-radius: 25px; display: flex; align-items: center; padding: 0 15px; }
+        .search-box input { flex: 1; background: none; border: none; outline: none; color: white; font-size: 15px; margin: 0 10px; }
+        .search-panel { margin-top: 65px; padding: 15px; }
+        .item { height: 75px; display: flex; align-items: center; gap: 16px; padding: 8px 16px; border-bottom: 1px solid #121212; cursor: pointer; transition: background 0.2s ease; }
+        .item:active { background: #1a1a1a; }
+        .anime-thumb { width: 48px; height: 64px; border-radius: 6px; object-fit: cover; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .item div { display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+        .item div div { font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+        .item small { color: #666; font-size: 12px; }
+        .history-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color: #aaa; }
+        #clearBtn { background: none; border: none; color: #a855f7; font-size: 13px; cursor: pointer; }
+        .loader { width: 25px; height: 25px; border: 3px solid #222; border-top: 3px solid #a855f7; border-radius: 50%; margin: 20px auto; animation: spin .8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse { 0% { transform: scale(0.8); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.8); opacity: 0.5; } }
+    </style>
+</head>
+<body>
+
+<div class="search-header">
+    <i class="fa-solid fa-arrow-left back" onclick="history.back()"></i>
+    <div class="search-box">
+        <i class="fa-solid fa-search"></i>
+        <input id="searchInput" placeholder="Search anime" autocomplete="off">
+        <i class="fa-solid fa-microphone" id="micBtn" style="cursor:pointer; color:#a855f7; padding:0 10px;"></i>
+    </div>
+</div>
+
+<div id="panel" class="search-panel"></div>
+
+<div id="confirmModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:99; align-items:center; justify-content:center;">
+    <div style="background:#1a1a1a; padding:20px; border-radius:15px; width:80%; text-align:center;">
+        <p>Do you want to clear all the search history?</p>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button onclick="closeModal()" style="flex:1; padding:10px; border-radius:8px; border:none; background:#333; color:white;">Deny</button>
+            <button onclick="clearAllHistory()" style="flex:1; padding:10px; border-radius:8px; border:none; background:#a855f7; color:white;">Yes</button>
+        </div>
+    </div>
+</div>
+
+<div id="voiceOverlay" style="display:none; position:fixed; bottom:0; left:0; width:100%; height:300px; background:#121212; border-radius:30px 30px 0 0; z-index:999; flex-direction:column; align-items:center; justify-content:center; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);">
+    <h3 id="statusText">Listening...</h3>
+    <div style="width:60px; height:60px; background:#a855f7; border-radius:50%; margin:20px; animation: pulse 1.5s infinite;"></div>
+    <button onclick="stopVoiceSearch()" style="background:none; border:none; color:#ff4444; font-size:16px;">Cancel</button>
+</div>
+
+<script>
+    const panel = document.getElementById("panel");
+    const input = document.getElementById("searchInput");
+    const micBtn = document.getElementById("micBtn");
+    const overlay = document.getElementById("voiceOverlay");
+    const status = document.getElementById("statusText");
+    let historyList = JSON.parse(localStorage.getItem("animeHistory")) || [];
+
+    // Setup Voice Recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition;
+    if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    
+    // KEY CHANGES FOR PRECISION:
+    recognition.continuous = false;         // Stop automatically when user stops speaking
+    recognition.interimResults = true;     // Show what it's thinking in real-time
+    recognition.maxAlternatives = 1;       // Focus on the most likely match
+
+    micBtn.onclick = () => {
+      // This tells the browser to expect specific keywords
+recognition.grammars = new (window.SpeechGrammarList || window.webkitSpeechGrammarList)();
+
+        recognition.start();
+        overlay.style.display = "flex";
+        status.innerText = "Listening...";
+    };
+
+    // Show what it's hearing while the user is still talking
+    recognition.onresult = (event) => {
+        let finalTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+            finalTranscript += event.results[i][0].transcript;
+        }
+        
+        // Update the search box in real-time so the user can see if it's correct
+        input.value = finalTranscript;
+        
+        // If it's a final result, trigger search
+        if (event.results[0].isFinal) {
+            overlay.style.display = "none";
+            searchAnime(finalTranscript);
+            handleSelect(finalTranscript);
+        }
+    };
+}
+
+
+    function stopVoiceSearch() { recognition.stop(); overlay.style.display = "none"; }
+
+    function showHistory() {
+        if (historyList.length === 0) {
+            panel.innerHTML = `<div style="color:#888; text-align:center; margin-top:50px;"><p>Recent searches appear here</p></div>`;
+            return;
+        }
+        panel.innerHTML = `<div class="history-top"><h3>Recent Searches</h3><button id="clearBtn">Clear All</button></div>`;
+        historyList.forEach((item, index) => {
+            panel.innerHTML += `
+            <div class="item">
+                <i class="fa-solid fa-clock-rotate-left" onclick="handleSelect('${item}')" style="flex:1;"></i>
+                <span onclick="handleSelect('${item}')" style="flex:8;">${item}</span>
+                <i class="fa-solid fa-xmark" onclick="removeSingleItem(${index})" style="cursor:pointer; color:#555;"></i>
+            </div>`;
+        });
+        document.getElementById("clearBtn").onclick = () => document.getElementById("confirmModal").style.display = "flex";
+    }
+
+    function removeSingleItem(index) { historyList.splice(index, 1); localStorage.setItem("animeHistory", JSON.stringify(historyList)); showHistory(); }
+    function clearAllHistory() { historyList = []; localStorage.removeItem("animeHistory"); closeModal(); showHistory(); }
+    function closeModal() { document.getElementById("confirmModal").style.display = "none"; }
+    function handleSelect(name) { historyList = [name, ...historyList.filter(x => x !== name)].slice(0, 10); localStorage.setItem("animeHistory", JSON.stringify(historyList)); input.value = name; }
+
+    let typingTimer;
+    input.addEventListener("input", () => {
+        clearTimeout(typingTimer);
+        if (input.value.trim() === "") { showHistory(); return; }
+        typingTimer = setTimeout(() => searchAnime(input.value.trim()), 300);
+    });
+
+    async function searchAnime(q) {
+        panel.innerHTML = `<div class="loader"></div>`;
+        try {
+            const response = await fetch(`https://api.jikan.moe/v4/anime?q=${q}&limit=8`);
+            const data = await response.json();
+            panel.innerHTML = "";
+            data.data.forEach(anime => {
+                panel.innerHTML += `<div class="item" onclick="handleSelect('${anime.title.replace(/'/g, "\\'")}')">
+                    <img class="anime-thumb" src="${anime.images.jpg.image_url}">
+                    <div><div>${anime.title}</div><small>${anime.type || "Anime"}</small></div>
+                </div>`;
+            });
+        } catch { panel.innerHTML = `<div style="text-align:center; margin-top:20px;">No results found</div>`; }
+    }
+
+    window.onload = () => { input.focus(); showHistory(); };
+</script>
+</body>
+</html>

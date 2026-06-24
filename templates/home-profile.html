@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
+<title>ZenkaiOS - Profile</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+-webkit-tap-highlight-color:transparent;
+}
+
+body{
+background:#050505;
+color:white;
+max-width:390px;
+margin:auto;
+padding-bottom:100px;
+}
+
+/* Purple Background Glow */
+
+body::before{
+content:"";
+position:fixed;
+top:-150px;
+right:-120px;
+width:350px;
+height:350px;
+background:radial-gradient(circle,
+rgba(138,43,226,.45),
+transparent 70%);
+pointer-events:none;
+}
+
+/* HEADER */
+
+.header{
+padding:26px 22px 16px;
+}
+
+.header-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+}
+
+.header-top h1{
+font-size:19px;
+font-weight:700;
+}
+
+.header-icons{
+display:flex;
+gap:25px;
+font-size:24px;
+}
+
+.header-icons i{
+cursor:pointer;
+}
+
+/* PROFILE SECTION */
+
+.profile{
+display:flex;
+align-items:center;
+gap:18px;
+}
+
+.avatar-box{
+position:relative;
+}
+
+.avatar{
+width:82px;
+height:82px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid #a855f7;
+}
+
+.edit-btn{
+position:absolute;
+bottom:5px;
+right:5px;
+width:26px;
+height:26px;
+background:#a855f7;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:11px;
+}
+
+.profile-info{
+flex:1;
+}
+
+.profile-info h2{
+font-size:15px;
+margin-bottom:4px;
+}
+
+.profile-info p{
+font-size:12px;
+color:#9a9a9a;
+margin-bottom:4px;
+}
+
+.arrow{
+font-size:24px;
+color:#999;
+}
+
+/* STATS */
+
+.profile-stats{
+display:flex;
+justify-content:space-around;
+margin-top:18px;
+padding-top: 8px;
+padding-bottom:10px;
+border-bottom:1px solid #171717;
+position: relative;
+}
+
+.p-stat{
+  flex: 1;
+text-align:center;
+position: relative;
+}
+.p-stat:not(:last-child)::after{
+    content:"";
+    position:absolute;
+    right:0;
+    top:6px;
+    width:1px;
+    height:35px;
+    background:#171717;
+}
+
+
+.p-stat h3{
+color:#a855f7;
+font-size:18px;
+margin-bottom:6px;
+}
+
+.p-stat p{
+font-size:11px;
+color:#999;
+}
+
+/* SECTION TITLE */
+
+.section{
+padding:22px 22px 12px;
+}
+
+.section-title{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:18px;
+}
+
+.section-title h2{
+font-size:16px;
+}
+
+.section-title span{
+color:#a855f7;
+font-size:13px;
+}
+
+/* CONTINUE WATCHING */
+
+.continue-list{
+display:flex;
+gap:12px;
+overflow-x:auto;
+padding-bottom:5px;
+}
+
+.continue-list::-webkit-scrollbar{
+display:none;
+}
+
+.continue-card{
+min-width:210px;
+max-width: 210px;
+}
+
+.continue-poster{
+height:92px;
+border-radius:12px;
+overflow:hidden;
+position:relative;
+border:1px solid #171717;
+}
+
+.continue-poster img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.play-btn{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:42px;
+height:42px;
+border-radius:50%;
+border:2px solid white;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:14px;
+}
+
+.continue-title{
+margin-top:8px;
+font-size:13px;
+font-weight:600;
+}
+
+.continue-ep{
+font-size:11px;
+color:#aaa;
+margin-top:4px;
+}
+
+.progress{
+height:5px;
+background:#171717;
+border-radius:20px;
+margin-top:12px;
+overflow:hidden;
+}
+
+.fill{
+height:100%;
+background:#a855f7;
+border-radius:20px;
+}
+
+/* MENU BOX */
+
+.menu-box{
+margin:20px 22px;
+background:#090909;
+border:1px solid #171717;
+border-radius:18px;
+overflow:hidden;
+}
+
+.menu-item{
+height:58px;
+display:flex;
+align-items:center;
+padding:0 18px;
+border-bottom:1px solid #171717;
+}
+
+.menu-item:last-child{
+border-bottom:none;
+}
+
+.menu-item i:first-child{
+width:40px;
+font-size:18px;
+color:#a855f7;
+}
+
+.menu-text{
+flex:1;
+font-size:15px;
+}
+
+.menu-item i:last-child{
+font-size:18px;
+color:#999;
+}
+
+.version{
+font-size:14px;
+color:#777;
+margin-right:10px;
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav{
+position:fixed;
+bottom:0;
+left:50%;
+transform:translateX(-50%);
+width:100%;
+max-width:430px;
+height:72px;
+background:#050505;
+border-top:1px solid #171717;
+display:flex;
+justify-content:space-around;
+align-items:center;
+}
+
+.bottom-nav a{
+text-decoration:none;
+color:#777;
+display:flex;
+flex-direction:column;
+align-items:center;
+font-size:12px;
+}
+
+.bottom-nav i{
+font-size:22px;
+margin-bottom:5px;
+}
+
+.bottom-nav .active{
+color:#a855f7;
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+
+<div class="header-top">
+
+<h1>Profile</h1>
+
+<div class="header-icons">
+
+<i class="fa-solid fa-gear"></i>
+</div>
+
+</div>
+
+<div class="profile">
+
+<div class="avatar-box">
+
+<img class="avatar"
+src="https://cdn.myanimelist.net/images/anime/1764/126627.jpg">
+
+<div class="edit-btn">
+<i class="fa-solid fa-pen"></i>
+</div>
+
+</div>
+
+<div class="profile-info">
+
+<h2>AnimeLover</h2>
+
+<p>animelover@email.com</p>
+
+<p>Member since May 2024</p>
+
+</div>
+
+<div class="arrow">
+<i class="fa-solid fa-chevron-right"></i>
+</div>
+
+</div>
+
+<div class="profile-stats">
+
+<div class="p-stat">
+<h3>12</h3>
+<p>In Watchlist</p>
+</div>
+
+<div class="p-stat">
+<h3>5</h3>
+<p>Watching</p>
+</div>
+
+<div class="p-stat">
+<h3>18</h3>
+<p>Completed</p>
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+<h2>Continue Watching</h2>
+<span>View All ></span>
+</div>
+
+<div class="continue-list">
+
+<div class="continue-card">
+
+<div class="continue-poster">
+
+<img src="https://cdn.myanimelist.net/images/anime/10/47347.jpg">
+
+<div class="play-btn">
+<i class="fa-solid fa-play"></i>
+</div>
+
+</div>
+
+<div class="continue-title">
+Attack on Titan
+</div>
+
+<div class="continue-ep">
+S4 E21 • 23m left
+</div>
+
+<div class="progress">
+<div class="fill" style="width:35%"></div>
+</div>
+
+</div>
+
+<div class="continue-card">
+
+<div class="continue-poster">
+
+<img src="https://cdn.myanimelist.net/images/anime/1764/126627.jpg">
+
+<div class="play-btn">
+<i class="fa-solid fa-play"></i>
+</div>
+
+</div>
+
+<div class="continue-title">
+Solo Leveling
+</div>
+
+<div class="continue-ep">
+S1 E8 • 10m left
+</div>
+
+<div class="progress">
+<div class="fill" style="width:40%"></div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="menu-box">
+
+<div class="menu-item">
+<i class="fa-regular fa-bookmark"></i>
+<div class="menu-text">My Watchlist</div>
+<i class="fa-solid fa-chevron-right"></i>
+</div>
+
+<div class="menu-item">
+<i class="fa-regular fa-star"></i>
+<div class="menu-text">My Ratings</div>
+<i class="fa-solid fa-chevron-right"></i>
+</div>
+
+<div class="menu-item">
+<i class="fa-solid fa-download"></i>
+<div class="menu-text">Download History</div>
+<i class="fa-solid fa-chevron-right"></i>
+</div>
+
+<div class="menu-item">
+<i class="fa-solid fa-clock-rotate-left"></i>
+<div class="menu-text">Viewing History</div>
+<i class="fa-solid fa-chevron-right"></i>
+</div>
+
+</div>
+
+<div class="menu-box">
+
+<div class="menu-item">
+<i class="fa-solid fa-gear"></i>
+<div class="menu-text">App Settings</div>
+<i class="fa-solid fa-chevron-right"></i>
+</div>
+
+<div class="menu-item">
+<i class="fa-regular fa-bell"></i>
+<div class="menu-text">Notifications</div>
+<i class="fa-solid fa-chevron-right"></i>
+</div>
+
+<div class="menu-item">
+<i class="fa-regular fa-circle-question"></i>
+<div class="menu-text">Help & Support</div>
+<i class="fa-solid fa-chevron-right"></i>
+</div>
+
+<div class="menu-item">
+<i class="fa-solid fa-circle-info"></i>
+<div class="menu-text">About ZenkaiOS</div>
+
+<span class="version">v1.2.0</span>
+
+<i class="fa-solid fa-chevron-right"></i>
+</div>
+
+</div>
+
+<nav class="bottom-nav">
+
+<a href="/home">
+<i class="fa-solid fa-house"></i>
+<span>Home</span>
+</a>
+
+<a href="/anime">
+<i class="fa-solid fa-tv"></i>
+<span>Anime</span>
+</a>
+
+<a href="/mylist">
+<i class="fa-regular fa-bookmark"></i>
+<span>My List</span>
+</a>
+
+<a class="active">
+<i class="fa-solid fa-user"></i>
+<span>Profile</span>
+</a>
+
+</nav>
+
+</body>
+</html>

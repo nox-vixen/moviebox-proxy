@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>ZenkaiOS - My List</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+-webkit-tap-highlight-color:transparent;
+}
+
+body{
+background:#050505;
+color:#fff;
+max-width:390px;
+margin:auto;
+padding-bottom:90px;
+}
+
+/* HEADER */
+
+.header{
+padding:22px 18px 12px;
+}
+
+.header-top{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+}
+
+.header-left h1{
+font-size:20px;
+font-weight:700;
+}
+
+.header-left p{
+font-size:12px;
+color:#8d8d8d;
+margin-top:5px;
+}
+
+.header-right{
+display:flex;
+gap:20px;
+font-size:22px;
+}
+
+/* TABS */
+
+.tabs{
+margin:14px 18px;
+background:#0c0c0c;
+border:1px solid #181818;
+border-radius:16px;
+display:flex;
+overflow:hidden;
+}
+
+.tab{
+flex:1;
+height:48px;
+display:flex;
+justify-content:center;
+align-items:center;
+gap:6px;
+font-size:11px;
+color:#9b9b9b;
+border-right:1px solid #181818;
+}
+
+.tab:last-child{
+border-right:none;
+}
+
+.tab.active{
+background:#13081d;
+color:#b34fff;
+}
+
+.tab i{
+font-size:13px;
+}
+
+/* SORT */
+
+.list-row{
+padding:8px 18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:13px;
+color:#9a9a9a;
+}
+
+.list-row b{
+color:#b34fff;
+}
+
+.sort-right{
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+/* CARD */
+
+.card{
+margin:12px 18px;
+padding:14px;
+background:#090909;
+border:1px solid #141414;
+border-radius:18px;
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.drag{
+font-size:18px;
+color:#666;
+}
+
+.poster{
+width:74px;
+height:74px;
+border-radius:10px;
+object-fit:cover;
+}
+
+.content{
+flex:1;
+}
+
+.title{
+font-size:14px;
+font-weight:700;
+margin-bottom:7px;
+}
+
+.episodes{
+font-size:12px;
+color:#bfbfbf;
+margin-bottom:12px;
+}
+
+.episodes span{
+color:#b34fff;
+font-weight:600;
+}
+
+.progress-row{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.progress{
+flex:1;
+height:4px;
+background:#1d1d1d;
+border-radius:50px;
+overflow:hidden;
+}
+
+.fill{
+height:100%;
+background:#b34fff;
+border-radius:50px;
+}
+
+.percent{
+font-size:12px;
+font-weight:600;
+color:#b34fff;
+}
+
+.actions{
+display:flex;
+flex-direction:column;
+gap:16px;
+align-items:center;
+}
+
+.play{
+width:42px;
+height:42px;
+border-radius:50%;
+border:1px solid #2b2b2b;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:13px;
+}
+
+.more{
+font-size:18px;
+color:#aaa;
+}
+
+/* FIND MORE */
+
+.find-card{
+margin:18px;
+padding:18px;
+background:#090909;
+border:1px solid #141414;
+border-radius:18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.find-left{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.find-icon{
+width:48px;
+height:48px;
+border-radius:50%;
+background:#180b25;
+display:flex;
+justify-content:center;
+align-items:center;
+color:#b34fff;
+font-size:18px;
+}
+
+.find-text h3{
+font-size:15px;
+margin-bottom:5px;
+}
+
+.find-text p{
+font-size:12px;
+color:#9a9a9a;
+}
+
+/* STATS */
+
+.stats{
+margin:0 18px;
+background:#090909;
+border:1px solid #141414;
+border-radius:18px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+overflow:hidden;
+}
+
+.stat{
+padding:16px 0;
+text-align:center;
+border-right:1px solid #141414;
+}
+
+.stat:last-child{
+border-right:none;
+}
+
+.stat i{
+font-size:16px;
+color:#b34fff;
+margin-bottom:8px;
+}
+
+.stat h2{
+font-size:18px;
+margin-bottom:4px;
+}
+
+.stat p{
+font-size:11px;
+color:#9a9a9a;
+}
+
+/* NAVIGATION */
+
+.bottom-nav{
+position:fixed;
+bottom:0;
+left:50%;
+transform:translateX(-50%);
+width:100%;
+max-width:390px;
+height:70px;
+background:#050505;
+border-top:1px solid #161616;
+display:flex;
+justify-content:space-around;
+align-items:center;
+}
+
+.bottom-nav a{
+text-decoration:none;
+color:#777;
+display:flex;
+flex-direction:column;
+align-items:center;
+font-size:11px;
+}
+
+.bottom-nav i{
+font-size:20px;
+margin-bottom:5px;
+}
+
+.bottom-nav .active{
+color:#b34fff;
+}
+#bottomAvatar{
+width:20px;
+height:20px;
+border-radius:50%;
+object-fit:cover;
+border:1.5px solid #a855f7;
+margin-bottom:4px;
+}
+.search-btn{
+width:42px;
+height:25px;
+border:none;
+border-radius:50%;
+background:#111;
+color:white;
+font-size:17px;
+cursor:pointer;
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+
+<div class="header-top">
+
+<div class="header-left">
+<h1>My List</h1>
+<p>Your anime, your world</p>
+</div>
+
+<div class="header-right">
+  <button
+class="search-btn"
+id="searchBtn">
+<i class="fa-solid fa-search"></i>
+
+</button>
+<i class="fa-solid fa-ellipsis-vertical"></i>
+</div>
+
+</div>
+
+</div>
+
+<div class="tabs">
+
+<div class="tab active">
+<i class="fa-regular fa-bookmark"></i>
+<span>Watchlist</span>
+</div>
+
+<div class="tab">
+<i class="fa-regular fa-circle-play"></i>
+<span>Watching</span>
+</div>
+
+<div class="tab">
+<i class="fa-regular fa-circle-check"></i>
+<span>Completed</span>
+</div>
+
+<div class="tab">
+<i class="fa-regular fa-circle-xmark"></i>
+<span>Dropped</span>
+</div>
+
+</div>
+
+<div class="list-row">
+
+<span>12 Anime</span>
+
+<div class="sort-right">
+<span>Sort by: <b>Recently Added</b></span>
+<i class="fa-solid fa-chevron-down"></i>
+</div>
+
+</div>
+
+<!-- CARD -->
+
+<div class="card">
+
+<i class="fa-solid fa-bars drag"></i>
+
+<img class="poster"
+src="https://cdn.myanimelist.net/images/anime/1764/126627.jpg">
+
+<div class="content">
+
+<div class="title">Solo Leveling</div>
+
+<div class="episodes">
+<span>12</span> / 12 Episodes
+</div>
+
+<div class="progress-row">
+
+<div class="progress">
+<div class="fill" style="width:100%"></div>
+</div>
+
+<div class="percent">100%</div>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<div class="play">
+<i class="fa-solid fa-play"></i>
+</div>
+
+<i class="fa-solid fa-ellipsis-vertical more"></i>
+
+</div>
+
+</div>
+
+<!-- CARD -->
+
+<div class="card">
+
+<i class="fa-solid fa-bars drag"></i>
+
+<img class="poster"
+src="https://cdn.myanimelist.net/images/anime/1171/109222.jpg">
+
+<div class="content">
+
+<div class="title">Jujutsu Kaisen</div>
+
+<div class="episodes">
+<span>24</span> / 47 Episodes
+</div>
+
+<div class="progress-row">
+
+<div class="progress">
+<div class="fill" style="width:51%"></div>
+</div>
+
+<div class="percent">51%</div>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<div class="play">
+<i class="fa-solid fa-play"></i>
+</div>
+
+<i class="fa-solid fa-ellipsis-vertical more"></i>
+
+</div>
+
+</div>
+
+<!-- CARD -->
+
+<div class="card">
+
+<i class="fa-solid fa-bars drag"></i>
+
+<img class="poster"
+src="https://cdn.myanimelist.net/images/anime/1286/99889.jpg">
+
+<div class="content">
+
+<div class="title">Demon Slayer: Kimetsu no Yaiba</div>
+
+<div class="episodes">
+<span>55</span> / 55 Episodes
+</div>
+
+<div class="progress-row">
+
+<div class="progress">
+<div class="fill" style="width:100%"></div>
+</div>
+
+<div class="percent">100%</div>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<div class="play">
+<i class="fa-solid fa-play"></i>
+</div>
+
+<i class="fa-solid fa-ellipsis-vertical more"></i>
+
+</div>
+
+</div>
+
+<!-- FIND MORE -->
+
+<div class="find-card">
+
+<div class="find-left">
+
+<div class="find-icon">
+<i class="fa-solid fa-heart"></i>
+</div>
+
+<div class="find-text">
+<h3>Find More to Add</h3>
+<p>Discover anime you'll love</p>
+</div>
+
+</div>
+
+<i class="fa-solid fa-chevron-right"></i>
+
+</div>
+
+<!-- STATS -->
+
+<div class="stats">
+
+<div class="stat">
+<i class="fa-regular fa-bookmark"></i>
+<h2>12</h2>
+<p>In Watchlist</p>
+</div>
+
+<div class="stat">
+<i class="fa-regular fa-circle-play"></i>
+<h2>5</h2>
+<p>Watching</p>
+</div>
+
+<div class="stat">
+<i class="fa-regular fa-circle-check"></i>
+<h2>18</h2>
+<p>Completed</p>
+</div>
+
+<div class="stat">
+<i class="fa-regular fa-circle-xmark"></i>
+<h2>3</h2>
+<p>Dropped</p>
+</div>
+
+</div>
+
+<nav class="bottom-nav">
+
+<a href="/home">
+<i class="fa-solid fa-house"></i>
+<span>Home</span>
+</a>
+
+<a href="/anime">
+<i class="fa-solid fa-tv"></i>
+<span>Anime</span>
+</a>
+
+<a class="active">
+<i class="fa-solid fa-bookmark"></i>
+<span>My List</span>
+</a>
+
+<a href ="/profile">
+
+<img
+id="bottomAvatar"
+src="https://i.pravatar.cc/100">
+
+<span>Profile</span>
+
+</a>
+
+</nav>
+<script>
+document
+.getElementById(
+"searchBtn"
+)
+.addEventListener(
+"click",
+()=>{
+
+window.location.href =
+"/search";
+
+});
+
+</script>
+</body>
+</html>
