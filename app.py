@@ -40,11 +40,12 @@ def welcome():
 def anime():
 
     try:
-        data = asyncio.run(
-            moviebox_get(
-                "/wefeed-mobile-bff/tab-operating?page=1&tabId=0&version="
-            )
-        )
+
+data = asyncio.run(
+    moviebox_get(
+        "/wefeed-h5api-bff/page-api/home"
+    )
+)
 
         return jsonify(data)
 
