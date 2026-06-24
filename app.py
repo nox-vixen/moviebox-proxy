@@ -46,8 +46,12 @@ def anime():
                 "/wefeed-h5api-bff/home?host=moviebox.ph"
             )
         )
-        parsed = json.loads(raw["text"])
+        text = raw["text"]
 
+        print("RAW RESPONSE:")
+        print(text[:5000])
+
+        parsed = json.loads(text)
         anime_list = []
 
         for section in parsed["data"]["operatingList"]:
