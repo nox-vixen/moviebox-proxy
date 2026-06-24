@@ -40,12 +40,11 @@ def welcome():
 def anime():
 
     try:
-
-data = asyncio.run(
-    moviebox_get(
-        "/wefeed-h5api-bff/page-api/home"
-    )
-)
+        data = asyncio.run(
+            moviebox_get(
+                "/wefeed-h5api-bff/page-api/home"
+            )
+        )
 
         return jsonify(data)
 
@@ -53,7 +52,6 @@ data = asyncio.run(
         return jsonify({
             "error": str(e)
         }), 500
-
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
