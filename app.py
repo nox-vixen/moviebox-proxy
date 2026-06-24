@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 import asyncio
+import json
 from moviebox_client import moviebox_get
-
 
 app = Flask(__name__)
 CORS(app)
@@ -41,20 +41,64 @@ def anime():
 
     try:
 
-        data = asyncio.run(
+        raw = asyncio.run(
             moviebox_get(
                 "/wefeed-h5api-bff/home?host=moviebox.ph"
             )
         )
+        parsed = json.loads(raw["text"])
 
-        return jsonify(data)
+        anime_list = []
 
+        for section in parsed["data"]["operatingList"]:
+
+            if section.get("type") == "SUBJECTS_MOVIE":
+
+                for subject in section.get(
+                    "subjects",
+                    []
+                ):
+
+                    anime_list.append({
+
+                        "title": subject.get(
+                            "title",
+                            "Unknown"
+                        ),
+
+                        "image": subject.get(
+                            "cover",
+                            {}
+                        ).get(
+                            "url",
+                            ""
+                        ),
+
+                        "rating": subject.get(
+                            "imdbRatingValue",
+                            "N/A"
+                        ),
+
+                        "year": subject.get(
+                            "releaseDate",
+                            ""
+                        )[:4],
+
+                        "episodes": "Anime",
+
+                        "tags": subject.get(
+                            "genre",
+                            ""
+                        ).split(",")
+
+                    })
+
+        return jsonify(anime_list)
     except Exception as e:
 
         return jsonify({
             "error": str(e)
         }), 500
-
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
