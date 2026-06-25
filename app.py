@@ -56,6 +56,9 @@ def anime():
 
         for section in parsed["data"]["operatingList"]:
 
+            print(section.get("title"))
+            print(section.get("type"))
+
             if section.get("type") == "SUBJECTS_MOVIE":
 
                 for subject in section.get(
