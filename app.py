@@ -60,10 +60,8 @@ def anime():
             print(section.get("type"))
 
             if (
-                section.get("type") ==
-            "SUBJECTS_MOVIE":
-                and section.get("title") ==
-            "Anime[English Dubbed]"
+                section.get("type") =="SUBJECTS_MOVIE":
+                and section.get("title") =="Anime[English Dubbed]"
             ):
                 for subject in section.get(
                     "subjects",
