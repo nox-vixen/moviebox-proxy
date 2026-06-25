@@ -54,31 +54,34 @@ def anime():
         parsed = json.loads(text)
         anime_list = []
 
+
         for section in parsed["data"]["operatingList"]:
 
-    if (
-        section.get("type") == "SUBJECTS_MOVIE"
-        and section.get("title") == "Anime[English Dubbed]"
-    ):
+            if (
+                section.get("type") == "SUBJECTS_MOVIE"
+                and section.get("title") == "Anime[English Dubbed]"
+            ):
 
-        for subject in section.get("subjects", []):
+                for subject in section.get("subjects", []):
 
-            anime_list.append({
-                "title": subject.get("title", "Unknown"),
-                "image": subject.get("cover", {}).get("url", ""),
-                "rating": subject.get("imdbRatingValue", "N/A"),
-                "year": subject.get("releaseDate", "")[:4],
-                "episodes": "Anime",
-                "tags": subject.get("genre", "").split(",")
-            })
+                    anime_list.append({
+                        "title": subject.get("title", "Unknown"),
+                        "image": subject.get("cover", {}).get("url", ""),
+                        "rating": subject.get("imdbRatingValue", "N/A"),
+                        "year": subject.get("releaseDate", "")[:4],
+                        "episodes": "Anime",
+                        "tags": subject.get("genre", "").split(",")
+                    })
 
         return jsonify(anime_list)
+
     except Exception as e:
 
         return jsonify({
             "error": str(e),
             "raw": raw["text"][:3000]
         }), 500
+
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
