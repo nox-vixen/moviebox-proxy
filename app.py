@@ -101,7 +101,7 @@ def anime():
     except Exception as e:
 
         return jsonify({
-            "error": str(e)
+            "error": str(e),
             "raw": raw["text"][:3000]
         }), 500
 if __name__ == "__main__":
