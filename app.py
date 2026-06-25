@@ -56,50 +56,21 @@ def anime():
 
         for section in parsed["data"]["operatingList"]:
 
-            print(section.get("title"))
-            print(section.get("type"))
+    if (
+        section.get("type") == "SUBJECTS_MOVIE"
+        and section.get("title") == "Anime[English Dubbed]"
+    ):
 
-            if (section.get("type") =="SUBJECTS_MOVIE":
-                and section.get("title") =="Anime[English Dubbed]"
-            ):
-                for subject in section.get(
-                    "subjects",
-                    []
-                ):
+        for subject in section.get("subjects", []):
 
-                    anime_list.append({
-
-                        "title": subject.get(
-                            "title",
-                            "Unknown"
-                        ),
-
-                        "image": subject.get(
-                            "cover",
-                            {}
-                        ).get(
-                            "url",
-                            ""
-                        ),
-
-                        "rating": subject.get(
-                            "imdbRatingValue",
-                            "N/A"
-                        ),
-
-                        "year": subject.get(
-                            "releaseDate",
-                            ""
-                        )[:4],
-
-                        "episodes": "Anime",
-
-                        "tags": subject.get(
-                            "genre",
-                            ""
-                        ).split(",")
-
-                    })
+            anime_list.append({
+                "title": subject.get("title", "Unknown"),
+                "image": subject.get("cover", {}).get("url", ""),
+                "rating": subject.get("imdbRatingValue", "N/A"),
+                "year": subject.get("releaseDate", "")[:4],
+                "episodes": "Anime",
+                "tags": subject.get("genre", "").split(",")
+            })
 
         return jsonify(anime_list)
     except Exception as e:
