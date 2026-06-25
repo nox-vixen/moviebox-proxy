@@ -102,6 +102,7 @@ def anime():
 
         return jsonify({
             "error": str(e)
+            "raw": raw["text"][:3000]
         }), 500
 if __name__ == "__main__":
     app.run(
